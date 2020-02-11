@@ -1,0 +1,5 @@
+general:
+    debug true
+
+rest:
+    server localhost 6000
