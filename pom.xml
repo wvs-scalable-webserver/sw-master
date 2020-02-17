@@ -48,7 +48,7 @@
         <dependency>
             <groupId>de.progme</groupId>
             <artifactId>hermes-server</artifactId>
-            <version>2.2.2-SNAPSHOT</version>
+            <version>2.2.4</version>
         </dependency>
 
         <!-- Gson -->
@@ -71,6 +71,13 @@
             <groupId>de.progme</groupId>
             <artifactId>thor-client</artifactId>
             <version>3.0.2-SNAPSHOT</version>
+        </dependency>
+
+        <!-- SW Shared -->
+        <dependency>
+            <groupId>de.wvs</groupId>
+            <artifactId>sw-shared</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

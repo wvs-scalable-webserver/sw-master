@@ -1,0 +1,11 @@
+general:
+    debug true
+
+rest:
+    server localhost 6000
+
+mysql:
+    host vweb05.lumaserv.com 3306
+    database m_erkes_school
+    user m_erkes_school
+    password 48%tyC6w

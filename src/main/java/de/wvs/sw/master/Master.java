@@ -47,6 +47,7 @@ public class Master {
     @Getter
     private IrisConfig config;
 
+    @Getter
     private ScheduledExecutorService scheduledExecutorService;
 
     @Getter
