@@ -1,6 +1,9 @@
 package de.wvs.sw.master;
 
 import ch.qos.logback.classic.Level;
+import de.progme.athena.Athena;
+import de.progme.athena.db.Type;
+import de.progme.athena.db.settings.AthenaSettings;
 import de.progme.iris.IrisConfig;
 import de.progme.iris.config.Header;
 import de.progme.iris.config.Key;
@@ -8,6 +11,9 @@ import de.progme.thor.client.pub.Publisher;
 import de.progme.thor.client.pub.PublisherFactory;
 import de.progme.thor.client.sub.Subscriber;
 import de.progme.thor.client.sub.SubscriberFactory;
+import de.wvs.sw.master.application.ApplicationManager;
+import de.wvs.sw.master.channel.ChannelManager;
+import de.wvs.sw.master.channel.packets.connection.ReconnectPacket;
 import de.wvs.sw.master.command.Command;
 import de.wvs.sw.master.command.CommandManager;
 import de.wvs.sw.master.command.impl.DebugCommand;
@@ -48,10 +54,20 @@ public class Master {
 
     private Scanner scanner;
 
+    @Getter
+    private Athena athena;
+
+    @Getter
     private Publisher publisher;
+    @Getter
     private Subscriber subscriber;
 
+    private ChannelManager channelManager;
+
     private RestServer restServer;
+
+    @Getter
+    private ApplicationManager applicationManager;
 
     public Master(IrisConfig config) {
 
@@ -70,8 +86,17 @@ public class Master {
         commandManager.addCommand(new DebugCommand("debug", "Turns the debug mode on/off", "d"));
         commandManager.addCommand(new StatsCommand("stats", "Shows live stats", "s"));
 
+        this.setupDatabase();
+        this.connectDatabase();
+
         this.startThor();
+        this.startCommunication();
+
         this.startRestServer();
+
+        this.startApplicationManager();
+
+        this.channelManager.send(new ReconnectPacket());
     }
 
     public void stop() {
@@ -81,14 +106,11 @@ public class Master {
         // Close the scanner
         scanner.close();
 
-        try {
-            this.restServer.stop();
-        } catch (Exception e) {
-            logger.warn("RESTful API server already stopped");
-        }
+        this.stopRestServer();
 
-        this.publisher.disconnect();
-        this.subscriber.disconnect();
+        this.stopThor();
+
+        this.disonnectDatabase();
 
         this.scheduledExecutorService.shutdown();
 
@@ -100,6 +122,38 @@ public class Master {
         restServer.start();
     }
 
+    private void stopRestServer() {
+        try {
+            this.restServer.stop();
+        } catch (Exception e) {
+            logger.warn("RESTful API server already stopped");
+        }
+    }
+
+    private void setupDatabase() {
+        Header mysqlHeader = this.config.getHeader("mysql");
+        Key hostKey = mysqlHeader.getKey("host");
+        Key databaseKey = mysqlHeader.getKey("database");
+        Key userKey = mysqlHeader.getKey("user");
+        Key passwordKey = mysqlHeader.getKey("password");
+        this.athena = new Athena(new AthenaSettings.Builder()
+                .host(hostKey.getValue(0).asString())
+                .port(hostKey.getValue(1).asInt())
+                .database(databaseKey.getValue(0).asString())
+                .user(userKey.getValue(0).asString())
+                .password(passwordKey.getValue(0).asString())
+                .type(Type.MYSQL)
+                .build());
+    }
+
+    private void connectDatabase() {
+        this.athena.connect();
+    }
+
+    private void disonnectDatabase() {
+        this.athena.close();
+    }
+
     private void startThor() {
         Header config = this.config.getHeader("thor");
         Key hostKey = config.getKey("host");
@@ -109,6 +163,21 @@ public class Master {
         this.subscriber = SubscriberFactory.create(host, port);
 
         logger.warn("Thor started");
+    }
+
+    private void startCommunication() {
+        this.channelManager = new ChannelManager();
+        this.channelManager.subscribe();
+    }
+
+    private void stopThor() {
+        this.publisher.disconnect();
+        this.subscriber.disconnect();
+    }
+
+    private void startApplicationManager() {
+
+        this.applicationManager = new ApplicationManager();
     }
 
     public void console() {

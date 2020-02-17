@@ -3,3 +3,9 @@ general:
 
 rest:
     server localhost 6000
+
+mysql:
+    host localhost 3306
+    database exampledatabase
+    user exampleuser
+    password examplepassword

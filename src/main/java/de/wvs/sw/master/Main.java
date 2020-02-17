@@ -39,7 +39,12 @@ public class Main {
         try {
             IrisConfig irisConfig = Iris.from(config)
                     .def(new Header("general"), new Key("debug"), new Value("true"))
+                    .def(new Header("rest"), new Key("server"), new Value("localhost"), new Value("6000"))
                     .def(new Header("thor"), new Key("host"), new Value("localhost"), new Value("1337"))
+                    .def(new Header("mysql"), new Key("host"), new Value("localhost"), new Value("3306"))
+                    .def(new Header("mysql"), new Key("database"), new Value("exampledatabase"))
+                    .def(new Header("mysql"), new Key("user"), new Value("exampleuser"))
+                    .def(new Header("mysql"), new Key("password"), new Value("examplepassword"))
                     .build();
 
             logger.info("Config loaded");
