@@ -1,8 +1,12 @@
 general:
     debug true
+    repository ./repository
 
 rest:
     server localhost 6000
+
+thor:
+    host localhost 1337
 
 mysql:
     host vweb05.lumaserv.com 3306

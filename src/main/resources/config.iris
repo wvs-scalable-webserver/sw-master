@@ -4,6 +4,9 @@ general:
 rest:
     server localhost 6000
 
+thor:
+    host localhost 1337
+
 mysql:
     host localhost 3306
     database exampledatabase

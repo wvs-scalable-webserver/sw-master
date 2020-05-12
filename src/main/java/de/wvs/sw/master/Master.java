@@ -63,6 +63,7 @@ public class Master {
     @Getter
     private Subscriber subscriber;
 
+    @Getter
     private ChannelManager channelManager;
 
     private RestServer restServer;
@@ -79,7 +80,7 @@ public class Master {
 
     public void start() {
 
-        this.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        this.scheduledExecutorService = Executors.newScheduledThreadPool(10);
 
         this.commandManager = new CommandManager();
         commandManager.addCommand(new HelpCommand("help", "List of available commands", "h"));
@@ -91,11 +92,11 @@ public class Master {
         this.connectDatabase();
 
         this.startThor();
-        this.startCommunication();
 
         this.startRestServer();
-
         this.startApplicationManager();
+
+        this.startCommunication();
 
         this.channelManager.send(new ReconnectPacket());
     }
@@ -107,13 +108,13 @@ public class Master {
         // Close the scanner
         scanner.close();
 
+        this.scheduledExecutorService.shutdown();
+
         this.stopRestServer();
 
         this.stopThor();
 
-        this.disonnectDatabase();
-
-        this.scheduledExecutorService.shutdown();
+        this.disconnectDatabase();
 
         logger.info("Master has been stopped");
     }
@@ -151,7 +152,7 @@ public class Master {
         this.athena.connect();
     }
 
-    private void disonnectDatabase() {
+    private void disconnectDatabase() {
         this.athena.close();
     }
 

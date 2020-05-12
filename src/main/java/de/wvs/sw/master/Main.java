@@ -39,6 +39,7 @@ public class Main {
         try {
             IrisConfig irisConfig = Iris.from(config)
                     .def(new Header("general"), new Key("debug"), new Value("true"))
+                    .def(new Header("general"), new Key("repository"), new Value("./repository"))
                     .def(new Header("rest"), new Key("server"), new Value("localhost"), new Value("6000"))
                     .def(new Header("thor"), new Key("host"), new Value("localhost"), new Value("1337"))
                     .def(new Header("mysql"), new Key("host"), new Value("localhost"), new Value("3306"))

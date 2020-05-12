@@ -44,11 +44,11 @@
             <version>3.12.1.GA</version>
         </dependency>
 
-        <!-- Hermes -->
+        <!-- Hermes Server -->
         <dependency>
             <groupId>de.progme</groupId>
             <artifactId>hermes-server</artifactId>
-            <version>2.2.4</version>
+            <version>2.2.5</version>
         </dependency>
 
         <!-- Gson -->
@@ -71,6 +71,13 @@
             <groupId>de.progme</groupId>
             <artifactId>thor-client</artifactId>
             <version>3.0.2-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Hermes Client -->
+        <dependency>
+            <groupId>de.progme</groupId>
+            <artifactId>hermes-client</artifactId>
+            <version>2.2.5</version>
         </dependency>
 
         <!-- SW Shared -->

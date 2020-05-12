@@ -11,11 +11,20 @@ public class Packet {
     @Getter
     private String channel;
     @Getter
+    private String subscriber;
+    @Getter
     protected JSONObject data;
 
     public Packet(String channel) {
 
         this.channel = channel;
+        this.data = new JSONObject();
+    }
+
+    public Packet(String channel, String subscriber) {
+
+        this.channel = channel;
+        this.subscriber = subscriber;
         this.data = new JSONObject();
     }
 }

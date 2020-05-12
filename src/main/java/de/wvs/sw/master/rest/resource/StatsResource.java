@@ -15,16 +15,16 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by Marvin Erkes on 04.02.2020.
  */
-@Path("/master")
-public class MasterResource {
+@Path("/master/stats")
+public class StatsResource {
 
-    private static Logger logger = LoggerFactory.getLogger(MasterResource.class);
+    private static Logger logger = LoggerFactory.getLogger(StatsResource.class);
     private static Gson gson = new Gson();
 
     @GET
-    @Path("/stats")
+    @Path("")
     @Produces(ContentType.APPLICATION_JSON)
-    public Response stats(Request httpRequest) {
+    public Response getStats(Request httpRequest) {
 
         return Response
                 .ok()

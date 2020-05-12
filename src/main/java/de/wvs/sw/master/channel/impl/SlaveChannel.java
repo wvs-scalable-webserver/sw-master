@@ -37,6 +37,5 @@ public class SlaveChannel {
     public void onConnectionHeartbeat(JSONObject data) {
         SWSlave slave =  gson.fromJson(data.getString("slave"), SWSlave.class);
         Master.getInstance().getApplicationManager().onSlaveHeartbeat(slave);
-        System.out.println("heartbeat!");
     }
 }
